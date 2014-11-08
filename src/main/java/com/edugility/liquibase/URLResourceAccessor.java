@@ -27,6 +27,7 @@
  */
 package com.edugility.liquibase;
 
+import java.io.File; // for javadoc only
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -97,10 +98,11 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
       throw new IllegalArgumentException("delegate", new NullPointerException("delegate"));
     }
     this.delegate = delegate;
+    this.init();
   }
 
   /**
-   * Returns a {@link Set} of [@linkplain InputStream#close() open}
+   * Returns a {@link Set} of {@linkplain InputStream#close() open}
    * {@link InputStream}s that the supplied {@code path} logically
    * designates.
    *
@@ -137,7 +139,9 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
       try {
         returnValue = Collections.singleton(new URL(path).openStream());
       } catch (final MalformedURLException expectedInSomeCases) {
-        returnValue = this.delegate.getResourcesAsStream(path);
+        if (this.delegate != null) {
+          returnValue = this.delegate.getResourcesAsStream(path);
+        }
       }
     }
     if (returnValue == null || returnValue.isEmpty()) {
@@ -167,17 +171,19 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    * method on the {@link ResourceAccessor} supplied at {@linkplain
    * #URLResourceAccessor(ResourceAccessor) construction time}
    *
-   * @param includeFiles a {@code boolean} passed to the {@link
+   * @param includeFiles whether non-directory {@link File}s should be
+   * returned; passed to the {@link ResourceAccessor#list(String,
+   * String, boolean, boolean, boolean)} method on the {@link
+   * ResourceAccessor} supplied at {@linkplain
+   * #URLResourceAccessor(ResourceAccessor) construction time}
+   *
+   * @param includeDirectories whether {@linkplain File#isDirectory()
+   * directories} should be returned; passed to the {@link
    * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
    * method on the {@link ResourceAccessor} supplied at {@linkplain
    * #URLResourceAccessor(ResourceAccessor) construction time}
    *
-   * @param includeDirectories a {@code boolean} passed to the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
-   *
-   * @param recursive a {@code boolean} passed to the {@link
+   * @param recursive if {@code true}, a {@code boolean} passed to the {@link
    * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
    * method on the {@link ResourceAccessor} supplied at {@linkplain
    * #URLResourceAccessor(ResourceAccessor) construction time}
@@ -190,7 +196,11 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    */
   @Override
   public Set<String> list(final String relativeTo, final String path, final boolean includeFiles, final boolean includeDirectories, final boolean recursive) throws IOException {
-    return this.delegate.list(relativeTo, path, includeFiles, includeDirectories, recursive);
+    if (this.delegate == null) {
+      return Collections.emptySet();
+    } else {
+      return this.delegate.list(relativeTo, path, includeFiles, includeDirectories, recursive);
+    }
   }
 
   /**
@@ -205,7 +215,11 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    */
   @Override
   public ClassLoader toClassLoader() {
-    return this.delegate.toClassLoader();
+    if (this.delegate == null) {
+      return null;
+    } else {
+      return this.delegate.toClassLoader();
+    }
   }
   
 }
