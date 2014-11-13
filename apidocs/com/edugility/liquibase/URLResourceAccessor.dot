@@ -56,7 +56,7 @@ digraph G {
 <tr><td align="left" balign="left"> # init() </td></tr>
 <tr><td align="left" balign="left"> # isCaseSensitive() : boolean </td></tr>
 <tr><td align="left" balign="left"> # addRootPath(arg0 : java.net.URL) </td></tr>
-<tr><td align="left" balign="left"> # getRootPaths() : java.util.Set&lt;java.lang.String&gt; </td></tr>
+<tr><td align="left" balign="left"> # getRootPaths() : java.util.List&lt;java.lang.String&gt; </td></tr>
 <tr><td align="left" balign="left"> # getContents(arg0 : java.io.File, arg1 : boolean, arg2 : boolean, arg3 : boolean, arg4 : java.lang.String, arg5 : java.util.Set&lt;java.lang.String&gt;) </td></tr>
 <tr><td align="left" balign="left"> # convertToPath(arg0 : java.lang.String) : java.lang.String </td></tr>
 <tr><td align="left" balign="left"> # convertToPath(arg0 : java.lang.String, arg1 : java.lang.String) : java.lang.String </td></tr>
