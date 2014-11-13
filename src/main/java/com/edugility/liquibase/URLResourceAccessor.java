@@ -48,7 +48,7 @@ import liquibase.resource.ResourceAccessor;
  *
  * <h2>Design Notes</h2>
  *
- * <p>The Liquibase 3.2.2 {@link ResourceAccessor} interface is
+ * <p>The Liquibase 3.3.0 {@link ResourceAccessor} interface is
  * inconsistently documented, and mixes several quite unrelated
  * concerns together.  The {@link CompositeResourceAccessor}
  * implicitly relies on non-{@code null} values being returned from

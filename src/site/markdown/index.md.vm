@@ -1,0 +1,14 @@
+<!-- -*- markdown -*- -->
+# Introduction
+
+Welcome to the `${project.artifactId}` project.
+`${project.artifactId}` provides classes and interfaces that extend
+[Liquibase][1].
+
+# API Documentation
+
+The API is fully documented.  Please see the [API documentation][2] to
+get started.
+
+[1]: http://www.liquibase.org/
+[2]: apidocs/index.html
