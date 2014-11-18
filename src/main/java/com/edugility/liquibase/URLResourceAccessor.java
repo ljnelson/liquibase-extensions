@@ -102,63 +102,66 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
   }
 
   /**
-   * Returns a {@link Set} of {@linkplain InputStream#close() open}
-   * {@link InputStream}s that the supplied {@code path} logically
-   * designates.
+   * Returns a {@link Set} of <strong>{@linkplain InputStream#close()
+   * open}</strong> {@link InputStream}s that the supplied {@code
+   * path} logically designates, or {@code null} if there is no
+   * resource that can be identified with the supplied {@code path},
+   * per the contract of the {@link
+   * ResourceAccessor#getResourcesAsStream(String)} method.
    *
-   * <p>This method never returns {@code null}.</p>
+   * <p>This method may return {@code null} if there is no resource
+   * that can be identified by the supplied {@code path}.</p>
    *
    * <p>This implementation attempts to {@linkplain URL#URL(String)
    * create a <code>URL</code> from the supplied <code>path</code>},
    * and, if that operation is successful, to return a {@linkplain
-   * Collections#singleton(Object) <code>Set</code> containing
-   * only} that {@code URL}.  If a {@link MalformedURLException} is
-   * encountered during this operation, then the return value of the
-   * {@link #getResourcesAsStream(String)} method invoked on the
-   * {@linkplain #URLResourceAccessor(ResourceAccessor) delegate} is
-   * returned instead.</p>
-   *
-   * <p>If a {@code null} return value is about to be returned for any
-   * reason, then the return value of the {@link
-   * Collections#emptySet()} method is returned instead.</p>
+   * Collections#singleton(Object) <code>Set</code> containing only}
+   * that {@code URL}.  If a {@link MalformedURLException} is
+   * encountered during this operation, then {@code null} is returned
+   * instead.</p>
    *
    * @param path a {@link String} that will be passed unaltered to the
    * {@linkplain URL#URL(String) constructor of the <code>URL</code>
    * class}; must not be {@code null}
    *
-   * @return a non-{@code null} {@link Set} of open {@link InputStream}s
+   * @return a {@link Set} of <strong>{@linkplain InputStream#close()
+   * open}</strong> {@link InputStream}s, or {@code null}
    *
    * @exception NullPointerException if {@code path} is {@code null}
    *
    * @exception IOException if an input/output error occurs
+   *
+   * @see ResourceAccessor#getResourcesAsStream(String)
    */
   @Override
   public Set<InputStream> getResourcesAsStream(final String path) throws IOException {
-    Set<InputStream> returnValue = null;
-    if (path != null) {
+    final Set<InputStream> returnValue;
+    if (path == null) {
+      returnValue = null;
+    } else {
+      Set<InputStream> temp = null;
       try {
-        returnValue = Collections.singleton(new URL(path).openStream());
-      } catch (final MalformedURLException expectedInSomeCases) {
-        if (this.delegate != null) {
-          returnValue = this.delegate.getResourcesAsStream(path);
-        }
+        temp = Collections.singleton(new URL(path).openStream());
+      } catch (final MalformedURLException returnNullInsteadPerContract) {
+        temp = null;
+      } finally {
+        returnValue = temp;
       }
-    }
-    if (returnValue == null || returnValue.isEmpty()) {
-      returnValue = Collections.emptySet();
     }
     return returnValue;
   }
 
   /**
-   * Returns the result of invoking the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}.
-   *
-   * <p>The {@link ResourceAccessor} interface does not document any
+   * Returns {@code null} when invoked.
+   * 
+   * <p>The {@link ResourceAccessor} interface does not document all
    * of the parameters to this method.  They are passed to the
    * delegate unaltered.</p>
+   *
+   * <p>The {@link ResourceAccessor} interface does not document the
+   * purpose of this method that subclasses are required to implement.
+   * Consequently the behavior of this implementation may be
+   * incorrect.  Use it with care.</p>
    *
    * @param relativeTo a {@link String} passed to the {@link
    * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
@@ -188,7 +191,7 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    * method on the {@link ResourceAccessor} supplied at {@linkplain
    * #URLResourceAccessor(ResourceAccessor) construction time}
    *
-   * @return a {@link Set} of {@link String}s, or {@code null}
+   * @return {@code null} when invoked
    *
    * @exception IOException if an error occurs
    *
@@ -196,11 +199,7 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    */
   @Override
   public Set<String> list(final String relativeTo, final String path, final boolean includeFiles, final boolean includeDirectories, final boolean recursive) throws IOException {
-    if (this.delegate == null) {
-      return Collections.emptySet();
-    } else {
-      return this.delegate.list(relativeTo, path, includeFiles, includeDirectories, recursive);
-    }
+    return null;
   }
 
   /**
