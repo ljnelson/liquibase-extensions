@@ -1,6 +1,6 @@
 /* -*- mode: Java; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8-unix -*-
  *
- * Copyright (c) 2014 Edugility LLC.
+ * Copyright (c) 2014-2015 Edugility LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -72,8 +72,7 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
 
   /**
    * The non-{@code null} {@link ResourceAccessor} to which the {@link
-   * #list(String, String, boolean, boolean, boolean)} and {@link
-   * #toClassLoader()} methods are delegated.
+   * #toClassLoader()} method is delegated.
    *
    * <p>This field is never {@code null}.</p>
    *
@@ -85,8 +84,7 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
    * Creates a new {@link URLResourceAccessor}.
    *
    * @param delegate the {@link ResourceAccessor} to which the {@link
-   * #list(String, String, boolean, boolean, boolean)} and {@link
-   * #toClassLoader()} methods will be delegated; must not be {@code
+   * #toClassLoader()} method will be delegated; must not be {@code
    * null}
    *
    * @exception IllegalArgumentException if {@code delegate} is {@code
@@ -153,43 +151,21 @@ public class URLResourceAccessor extends AbstractResourceAccessor {
 
   /**
    * Returns {@code null} when invoked.
-   * 
-   * <p>The {@link ResourceAccessor} interface does not document all
-   * of the parameters to this method.  They are passed to the
-   * delegate unaltered.</p>
    *
    * <p>The {@link ResourceAccessor} interface does not document the
-   * purpose of this method that subclasses are required to implement.
-   * Consequently the behavior of this implementation may be
-   * incorrect.  Use it with care.</p>
+   * purpose of this method that subclasses are required to implement
+   * or all of its parameters.  Consequently the behavior of this
+   * implementation may be incorrect.  Use it with care.</p>
    *
-   * @param relativeTo a {@link String} passed to the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
-   * unaltered
+   * @param relativeTo ignored
    *
-   * @param path a {@link String} passed to the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
+   * @param path ignored
    *
-   * @param includeFiles whether non-directory {@link File}s should be
-   * returned; passed to the {@link ResourceAccessor#list(String,
-   * String, boolean, boolean, boolean)} method on the {@link
-   * ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
+   * @param includeFiles ignored
    *
-   * @param includeDirectories whether {@linkplain File#isDirectory()
-   * directories} should be returned; passed to the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
+   * @param includeDirectories ignored
    *
-   * @param recursive if {@code true}, a {@code boolean} passed to the {@link
-   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}
-   * method on the {@link ResourceAccessor} supplied at {@linkplain
-   * #URLResourceAccessor(ResourceAccessor) construction time}
+   * @param recursive ignored
    *
    * @return {@code null} when invoked
    *

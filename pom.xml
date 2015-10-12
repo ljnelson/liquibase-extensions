@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <prerequisites>
-    <maven>3.0.5</maven>
+    <maven>3.3.3</maven>
   </prerequisites>
 
   <groupId>com.edugility</groupId>
@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.edugility</groupId>
     <artifactId>edugility-oss-pluginmanagement-pom</artifactId>
-    <version>5</version>
+    <version>14</version>
   </parent>
 
   <name>Liquibase Extensions</name>
@@ -33,7 +33,7 @@
     <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
-      <version>3.3.1</version>
+      <version>3.4.1</version>
     </dependency>
 
     <dependency>
@@ -57,12 +57,6 @@
               <version>1.6</version>
             </dependency>
           </dependencies>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.github</groupId>
-          <artifactId>site-maven-plugin</artifactId>
-          <version>0.10</version>
         </plugin>
 
         <plugin>
@@ -228,7 +222,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.2</version>
         <!--
         <configuration>
           <excludeFilterFile>${basedir}/src/findbugs/exclude.xml</excludeFilterFile>
