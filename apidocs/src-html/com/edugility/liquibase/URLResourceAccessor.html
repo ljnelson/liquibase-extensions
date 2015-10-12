@@ -8,7 +8,7 @@
 <div class="sourceContainer">
 <pre><span class="sourceLineNo">001</span>/* -*- mode: Java; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8-unix -*-<a name="line.1"></a>
 <span class="sourceLineNo">002</span> *<a name="line.2"></a>
-<span class="sourceLineNo">003</span> * Copyright (c) 2014 Edugility LLC.<a name="line.3"></a>
+<span class="sourceLineNo">003</span> * Copyright (c) 2014-2015 Edugility LLC.<a name="line.3"></a>
 <span class="sourceLineNo">004</span> *<a name="line.4"></a>
 <span class="sourceLineNo">005</span> * Permission is hereby granted, free of charge, to any person<a name="line.5"></a>
 <span class="sourceLineNo">006</span> * obtaining a copy of this software and associated documentation<a name="line.6"></a>
@@ -80,156 +80,132 @@
 <span class="sourceLineNo">072</span><a name="line.72"></a>
 <span class="sourceLineNo">073</span>  /**<a name="line.73"></a>
 <span class="sourceLineNo">074</span>   * The non-{@code null} {@link ResourceAccessor} to which the {@link<a name="line.74"></a>
-<span class="sourceLineNo">075</span>   * #list(String, String, boolean, boolean, boolean)} and {@link<a name="line.75"></a>
-<span class="sourceLineNo">076</span>   * #toClassLoader()} methods are delegated.<a name="line.76"></a>
-<span class="sourceLineNo">077</span>   *<a name="line.77"></a>
-<span class="sourceLineNo">078</span>   * &lt;p&gt;This field is never {@code null}.&lt;/p&gt;<a name="line.78"></a>
-<span class="sourceLineNo">079</span>   *<a name="line.79"></a>
-<span class="sourceLineNo">080</span>   * @see #URLResourceAccessor(ResourceAccessor)<a name="line.80"></a>
-<span class="sourceLineNo">081</span>   */<a name="line.81"></a>
-<span class="sourceLineNo">082</span>  private final ResourceAccessor delegate;<a name="line.82"></a>
-<span class="sourceLineNo">083</span><a name="line.83"></a>
-<span class="sourceLineNo">084</span>  /**<a name="line.84"></a>
-<span class="sourceLineNo">085</span>   * Creates a new {@link URLResourceAccessor}.<a name="line.85"></a>
-<span class="sourceLineNo">086</span>   *<a name="line.86"></a>
-<span class="sourceLineNo">087</span>   * @param delegate the {@link ResourceAccessor} to which the {@link<a name="line.87"></a>
-<span class="sourceLineNo">088</span>   * #list(String, String, boolean, boolean, boolean)} and {@link<a name="line.88"></a>
-<span class="sourceLineNo">089</span>   * #toClassLoader()} methods will be delegated; must not be {@code<a name="line.89"></a>
-<span class="sourceLineNo">090</span>   * null}<a name="line.90"></a>
-<span class="sourceLineNo">091</span>   *<a name="line.91"></a>
-<span class="sourceLineNo">092</span>   * @exception IllegalArgumentException if {@code delegate} is {@code<a name="line.92"></a>
-<span class="sourceLineNo">093</span>   * null}<a name="line.93"></a>
-<span class="sourceLineNo">094</span>   */<a name="line.94"></a>
-<span class="sourceLineNo">095</span>  public URLResourceAccessor(final ResourceAccessor delegate) {<a name="line.95"></a>
-<span class="sourceLineNo">096</span>    super();<a name="line.96"></a>
-<span class="sourceLineNo">097</span>    if (delegate == null) {<a name="line.97"></a>
-<span class="sourceLineNo">098</span>      throw new IllegalArgumentException("delegate", new NullPointerException("delegate"));<a name="line.98"></a>
-<span class="sourceLineNo">099</span>    }<a name="line.99"></a>
-<span class="sourceLineNo">100</span>    this.delegate = delegate;<a name="line.100"></a>
-<span class="sourceLineNo">101</span>    this.init();<a name="line.101"></a>
-<span class="sourceLineNo">102</span>  }<a name="line.102"></a>
-<span class="sourceLineNo">103</span><a name="line.103"></a>
-<span class="sourceLineNo">104</span>  /**<a name="line.104"></a>
-<span class="sourceLineNo">105</span>   * Returns a {@link Set} of &lt;strong&gt;{@linkplain InputStream#close()<a name="line.105"></a>
-<span class="sourceLineNo">106</span>   * open}&lt;/strong&gt; {@link InputStream}s that the supplied {@code<a name="line.106"></a>
-<span class="sourceLineNo">107</span>   * path} logically designates, or {@code null} if there is no<a name="line.107"></a>
-<span class="sourceLineNo">108</span>   * resource that can be identified with the supplied {@code path},<a name="line.108"></a>
-<span class="sourceLineNo">109</span>   * per the contract of the {@link<a name="line.109"></a>
-<span class="sourceLineNo">110</span>   * ResourceAccessor#getResourcesAsStream(String)} method.<a name="line.110"></a>
-<span class="sourceLineNo">111</span>   *<a name="line.111"></a>
-<span class="sourceLineNo">112</span>   * &lt;p&gt;This method may return {@code null} if there is no resource<a name="line.112"></a>
-<span class="sourceLineNo">113</span>   * that can be identified by the supplied {@code path}.&lt;/p&gt;<a name="line.113"></a>
-<span class="sourceLineNo">114</span>   *<a name="line.114"></a>
-<span class="sourceLineNo">115</span>   * &lt;p&gt;This implementation attempts to {@linkplain URL#URL(String)<a name="line.115"></a>
-<span class="sourceLineNo">116</span>   * create a &lt;code&gt;URL&lt;/code&gt; from the supplied &lt;code&gt;path&lt;/code&gt;},<a name="line.116"></a>
-<span class="sourceLineNo">117</span>   * and, if that operation is successful, to return a {@linkplain<a name="line.117"></a>
-<span class="sourceLineNo">118</span>   * Collections#singleton(Object) &lt;code&gt;Set&lt;/code&gt; containing only}<a name="line.118"></a>
-<span class="sourceLineNo">119</span>   * that {@code URL}.  If a {@link MalformedURLException} is<a name="line.119"></a>
-<span class="sourceLineNo">120</span>   * encountered during this operation, then {@code null} is returned<a name="line.120"></a>
-<span class="sourceLineNo">121</span>   * instead.&lt;/p&gt;<a name="line.121"></a>
-<span class="sourceLineNo">122</span>   *<a name="line.122"></a>
-<span class="sourceLineNo">123</span>   * @param path a {@link String} that will be passed unaltered to the<a name="line.123"></a>
-<span class="sourceLineNo">124</span>   * {@linkplain URL#URL(String) constructor of the &lt;code&gt;URL&lt;/code&gt;<a name="line.124"></a>
-<span class="sourceLineNo">125</span>   * class}; must not be {@code null}<a name="line.125"></a>
-<span class="sourceLineNo">126</span>   *<a name="line.126"></a>
-<span class="sourceLineNo">127</span>   * @return a {@link Set} of &lt;strong&gt;{@linkplain InputStream#close()<a name="line.127"></a>
-<span class="sourceLineNo">128</span>   * open}&lt;/strong&gt; {@link InputStream}s, or {@code null}<a name="line.128"></a>
+<span class="sourceLineNo">075</span>   * #toClassLoader()} method is delegated.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>   *<a name="line.76"></a>
+<span class="sourceLineNo">077</span>   * &lt;p&gt;This field is never {@code null}.&lt;/p&gt;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>   *<a name="line.78"></a>
+<span class="sourceLineNo">079</span>   * @see #URLResourceAccessor(ResourceAccessor)<a name="line.79"></a>
+<span class="sourceLineNo">080</span>   */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>  private final ResourceAccessor delegate;<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>  /**<a name="line.83"></a>
+<span class="sourceLineNo">084</span>   * Creates a new {@link URLResourceAccessor}.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>   *<a name="line.85"></a>
+<span class="sourceLineNo">086</span>   * @param delegate the {@link ResourceAccessor} to which the {@link<a name="line.86"></a>
+<span class="sourceLineNo">087</span>   * #toClassLoader()} method will be delegated; must not be {@code<a name="line.87"></a>
+<span class="sourceLineNo">088</span>   * null}<a name="line.88"></a>
+<span class="sourceLineNo">089</span>   *<a name="line.89"></a>
+<span class="sourceLineNo">090</span>   * @exception IllegalArgumentException if {@code delegate} is {@code<a name="line.90"></a>
+<span class="sourceLineNo">091</span>   * null}<a name="line.91"></a>
+<span class="sourceLineNo">092</span>   */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>  public URLResourceAccessor(final ResourceAccessor delegate) {<a name="line.93"></a>
+<span class="sourceLineNo">094</span>    super();<a name="line.94"></a>
+<span class="sourceLineNo">095</span>    if (delegate == null) {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>      throw new IllegalArgumentException("delegate", new NullPointerException("delegate"));<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    }<a name="line.97"></a>
+<span class="sourceLineNo">098</span>    this.delegate = delegate;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    this.init();<a name="line.99"></a>
+<span class="sourceLineNo">100</span>  }<a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>  /**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>   * Returns a {@link Set} of &lt;strong&gt;{@linkplain InputStream#close()<a name="line.103"></a>
+<span class="sourceLineNo">104</span>   * open}&lt;/strong&gt; {@link InputStream}s that the supplied {@code<a name="line.104"></a>
+<span class="sourceLineNo">105</span>   * path} logically designates, or {@code null} if there is no<a name="line.105"></a>
+<span class="sourceLineNo">106</span>   * resource that can be identified with the supplied {@code path},<a name="line.106"></a>
+<span class="sourceLineNo">107</span>   * per the contract of the {@link<a name="line.107"></a>
+<span class="sourceLineNo">108</span>   * ResourceAccessor#getResourcesAsStream(String)} method.<a name="line.108"></a>
+<span class="sourceLineNo">109</span>   *<a name="line.109"></a>
+<span class="sourceLineNo">110</span>   * &lt;p&gt;This method may return {@code null} if there is no resource<a name="line.110"></a>
+<span class="sourceLineNo">111</span>   * that can be identified by the supplied {@code path}.&lt;/p&gt;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>   *<a name="line.112"></a>
+<span class="sourceLineNo">113</span>   * &lt;p&gt;This implementation attempts to {@linkplain URL#URL(String)<a name="line.113"></a>
+<span class="sourceLineNo">114</span>   * create a &lt;code&gt;URL&lt;/code&gt; from the supplied &lt;code&gt;path&lt;/code&gt;},<a name="line.114"></a>
+<span class="sourceLineNo">115</span>   * and, if that operation is successful, to return a {@linkplain<a name="line.115"></a>
+<span class="sourceLineNo">116</span>   * Collections#singleton(Object) &lt;code&gt;Set&lt;/code&gt; containing only}<a name="line.116"></a>
+<span class="sourceLineNo">117</span>   * that {@code URL}.  If a {@link MalformedURLException} is<a name="line.117"></a>
+<span class="sourceLineNo">118</span>   * encountered during this operation, then {@code null} is returned<a name="line.118"></a>
+<span class="sourceLineNo">119</span>   * instead.&lt;/p&gt;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>   *<a name="line.120"></a>
+<span class="sourceLineNo">121</span>   * @param path a {@link String} that will be passed unaltered to the<a name="line.121"></a>
+<span class="sourceLineNo">122</span>   * {@linkplain URL#URL(String) constructor of the &lt;code&gt;URL&lt;/code&gt;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>   * class}; must not be {@code null}<a name="line.123"></a>
+<span class="sourceLineNo">124</span>   *<a name="line.124"></a>
+<span class="sourceLineNo">125</span>   * @return a {@link Set} of &lt;strong&gt;{@linkplain InputStream#close()<a name="line.125"></a>
+<span class="sourceLineNo">126</span>   * open}&lt;/strong&gt; {@link InputStream}s, or {@code null}<a name="line.126"></a>
+<span class="sourceLineNo">127</span>   *<a name="line.127"></a>
+<span class="sourceLineNo">128</span>   * @exception NullPointerException if {@code path} is {@code null}<a name="line.128"></a>
 <span class="sourceLineNo">129</span>   *<a name="line.129"></a>
-<span class="sourceLineNo">130</span>   * @exception NullPointerException if {@code path} is {@code null}<a name="line.130"></a>
+<span class="sourceLineNo">130</span>   * @exception IOException if an input/output error occurs<a name="line.130"></a>
 <span class="sourceLineNo">131</span>   *<a name="line.131"></a>
-<span class="sourceLineNo">132</span>   * @exception IOException if an input/output error occurs<a name="line.132"></a>
-<span class="sourceLineNo">133</span>   *<a name="line.133"></a>
-<span class="sourceLineNo">134</span>   * @see ResourceAccessor#getResourcesAsStream(String)<a name="line.134"></a>
-<span class="sourceLineNo">135</span>   */<a name="line.135"></a>
-<span class="sourceLineNo">136</span>  @Override<a name="line.136"></a>
-<span class="sourceLineNo">137</span>  public Set&lt;InputStream&gt; getResourcesAsStream(final String path) throws IOException {<a name="line.137"></a>
-<span class="sourceLineNo">138</span>    final Set&lt;InputStream&gt; returnValue;<a name="line.138"></a>
-<span class="sourceLineNo">139</span>    if (path == null) {<a name="line.139"></a>
-<span class="sourceLineNo">140</span>      returnValue = null;<a name="line.140"></a>
-<span class="sourceLineNo">141</span>    } else {<a name="line.141"></a>
-<span class="sourceLineNo">142</span>      Set&lt;InputStream&gt; temp = null;<a name="line.142"></a>
-<span class="sourceLineNo">143</span>      try {<a name="line.143"></a>
-<span class="sourceLineNo">144</span>        temp = Collections.singleton(new URL(path).openStream());<a name="line.144"></a>
-<span class="sourceLineNo">145</span>      } catch (final MalformedURLException returnNullInsteadPerContract) {<a name="line.145"></a>
-<span class="sourceLineNo">146</span>        temp = null;<a name="line.146"></a>
-<span class="sourceLineNo">147</span>      } finally {<a name="line.147"></a>
-<span class="sourceLineNo">148</span>        returnValue = temp;<a name="line.148"></a>
-<span class="sourceLineNo">149</span>      }<a name="line.149"></a>
-<span class="sourceLineNo">150</span>    }<a name="line.150"></a>
-<span class="sourceLineNo">151</span>    return returnValue;<a name="line.151"></a>
-<span class="sourceLineNo">152</span>  }<a name="line.152"></a>
-<span class="sourceLineNo">153</span><a name="line.153"></a>
-<span class="sourceLineNo">154</span>  /**<a name="line.154"></a>
-<span class="sourceLineNo">155</span>   * Returns {@code null} when invoked.<a name="line.155"></a>
-<span class="sourceLineNo">156</span>   * <a name="line.156"></a>
-<span class="sourceLineNo">157</span>   * &lt;p&gt;The {@link ResourceAccessor} interface does not document all<a name="line.157"></a>
-<span class="sourceLineNo">158</span>   * of the parameters to this method.  They are passed to the<a name="line.158"></a>
-<span class="sourceLineNo">159</span>   * delegate unaltered.&lt;/p&gt;<a name="line.159"></a>
-<span class="sourceLineNo">160</span>   *<a name="line.160"></a>
-<span class="sourceLineNo">161</span>   * &lt;p&gt;The {@link ResourceAccessor} interface does not document the<a name="line.161"></a>
-<span class="sourceLineNo">162</span>   * purpose of this method that subclasses are required to implement.<a name="line.162"></a>
-<span class="sourceLineNo">163</span>   * Consequently the behavior of this implementation may be<a name="line.163"></a>
-<span class="sourceLineNo">164</span>   * incorrect.  Use it with care.&lt;/p&gt;<a name="line.164"></a>
+<span class="sourceLineNo">132</span>   * @see ResourceAccessor#getResourcesAsStream(String)<a name="line.132"></a>
+<span class="sourceLineNo">133</span>   */<a name="line.133"></a>
+<span class="sourceLineNo">134</span>  @Override<a name="line.134"></a>
+<span class="sourceLineNo">135</span>  public Set&lt;InputStream&gt; getResourcesAsStream(final String path) throws IOException {<a name="line.135"></a>
+<span class="sourceLineNo">136</span>    final Set&lt;InputStream&gt; returnValue;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>    if (path == null) {<a name="line.137"></a>
+<span class="sourceLineNo">138</span>      returnValue = null;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>    } else {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>      Set&lt;InputStream&gt; temp = null;<a name="line.140"></a>
+<span class="sourceLineNo">141</span>      try {<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        temp = Collections.singleton(new URL(path).openStream());<a name="line.142"></a>
+<span class="sourceLineNo">143</span>      } catch (final MalformedURLException returnNullInsteadPerContract) {<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        temp = null;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>      } finally {<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        returnValue = temp;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>      }<a name="line.147"></a>
+<span class="sourceLineNo">148</span>    }<a name="line.148"></a>
+<span class="sourceLineNo">149</span>    return returnValue;<a name="line.149"></a>
+<span class="sourceLineNo">150</span>  }<a name="line.150"></a>
+<span class="sourceLineNo">151</span><a name="line.151"></a>
+<span class="sourceLineNo">152</span>  /**<a name="line.152"></a>
+<span class="sourceLineNo">153</span>   * Returns {@code null} when invoked.<a name="line.153"></a>
+<span class="sourceLineNo">154</span>   *<a name="line.154"></a>
+<span class="sourceLineNo">155</span>   * &lt;p&gt;The {@link ResourceAccessor} interface does not document the<a name="line.155"></a>
+<span class="sourceLineNo">156</span>   * purpose of this method that subclasses are required to implement<a name="line.156"></a>
+<span class="sourceLineNo">157</span>   * or all of its parameters.  Consequently the behavior of this<a name="line.157"></a>
+<span class="sourceLineNo">158</span>   * implementation may be incorrect.  Use it with care.&lt;/p&gt;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>   *<a name="line.159"></a>
+<span class="sourceLineNo">160</span>   * @param relativeTo ignored<a name="line.160"></a>
+<span class="sourceLineNo">161</span>   *<a name="line.161"></a>
+<span class="sourceLineNo">162</span>   * @param path ignored<a name="line.162"></a>
+<span class="sourceLineNo">163</span>   *<a name="line.163"></a>
+<span class="sourceLineNo">164</span>   * @param includeFiles ignored<a name="line.164"></a>
 <span class="sourceLineNo">165</span>   *<a name="line.165"></a>
-<span class="sourceLineNo">166</span>   * @param relativeTo a {@link String} passed to the {@link<a name="line.166"></a>
-<span class="sourceLineNo">167</span>   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}<a name="line.167"></a>
-<span class="sourceLineNo">168</span>   * method on the {@link ResourceAccessor} supplied at {@linkplain<a name="line.168"></a>
-<span class="sourceLineNo">169</span>   * #URLResourceAccessor(ResourceAccessor) construction time}<a name="line.169"></a>
-<span class="sourceLineNo">170</span>   * unaltered<a name="line.170"></a>
+<span class="sourceLineNo">166</span>   * @param includeDirectories ignored<a name="line.166"></a>
+<span class="sourceLineNo">167</span>   *<a name="line.167"></a>
+<span class="sourceLineNo">168</span>   * @param recursive ignored<a name="line.168"></a>
+<span class="sourceLineNo">169</span>   *<a name="line.169"></a>
+<span class="sourceLineNo">170</span>   * @return {@code null} when invoked<a name="line.170"></a>
 <span class="sourceLineNo">171</span>   *<a name="line.171"></a>
-<span class="sourceLineNo">172</span>   * @param path a {@link String} passed to the {@link<a name="line.172"></a>
-<span class="sourceLineNo">173</span>   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}<a name="line.173"></a>
-<span class="sourceLineNo">174</span>   * method on the {@link ResourceAccessor} supplied at {@linkplain<a name="line.174"></a>
-<span class="sourceLineNo">175</span>   * #URLResourceAccessor(ResourceAccessor) construction time}<a name="line.175"></a>
-<span class="sourceLineNo">176</span>   *<a name="line.176"></a>
-<span class="sourceLineNo">177</span>   * @param includeFiles whether non-directory {@link File}s should be<a name="line.177"></a>
-<span class="sourceLineNo">178</span>   * returned; passed to the {@link ResourceAccessor#list(String,<a name="line.178"></a>
-<span class="sourceLineNo">179</span>   * String, boolean, boolean, boolean)} method on the {@link<a name="line.179"></a>
-<span class="sourceLineNo">180</span>   * ResourceAccessor} supplied at {@linkplain<a name="line.180"></a>
-<span class="sourceLineNo">181</span>   * #URLResourceAccessor(ResourceAccessor) construction time}<a name="line.181"></a>
-<span class="sourceLineNo">182</span>   *<a name="line.182"></a>
-<span class="sourceLineNo">183</span>   * @param includeDirectories whether {@linkplain File#isDirectory()<a name="line.183"></a>
-<span class="sourceLineNo">184</span>   * directories} should be returned; passed to the {@link<a name="line.184"></a>
-<span class="sourceLineNo">185</span>   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}<a name="line.185"></a>
-<span class="sourceLineNo">186</span>   * method on the {@link ResourceAccessor} supplied at {@linkplain<a name="line.186"></a>
-<span class="sourceLineNo">187</span>   * #URLResourceAccessor(ResourceAccessor) construction time}<a name="line.187"></a>
+<span class="sourceLineNo">172</span>   * @exception IOException if an error occurs<a name="line.172"></a>
+<span class="sourceLineNo">173</span>   *<a name="line.173"></a>
+<span class="sourceLineNo">174</span>   * @see ResourceAccessor#list(String, String, boolean, boolean, boolean)<a name="line.174"></a>
+<span class="sourceLineNo">175</span>   */<a name="line.175"></a>
+<span class="sourceLineNo">176</span>  @Override<a name="line.176"></a>
+<span class="sourceLineNo">177</span>  public Set&lt;String&gt; list(final String relativeTo, final String path, final boolean includeFiles, final boolean includeDirectories, final boolean recursive) throws IOException {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>    return null;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>  }<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>  /**<a name="line.181"></a>
+<span class="sourceLineNo">182</span>   * Returns the result of invoking the {@link<a name="line.182"></a>
+<span class="sourceLineNo">183</span>   * ResourceAccessor#toClassLoader()} method on the {@link<a name="line.183"></a>
+<span class="sourceLineNo">184</span>   * ResourceAccessor} supplied at {@linkplain<a name="line.184"></a>
+<span class="sourceLineNo">185</span>   * #URLResourceAccessor(ResourceAccessor) construction time}.<a name="line.185"></a>
+<span class="sourceLineNo">186</span>   *<a name="line.186"></a>
+<span class="sourceLineNo">187</span>   * @return a {@link ClassLoader}, or {@code null}<a name="line.187"></a>
 <span class="sourceLineNo">188</span>   *<a name="line.188"></a>
-<span class="sourceLineNo">189</span>   * @param recursive if {@code true}, a {@code boolean} passed to the {@link<a name="line.189"></a>
-<span class="sourceLineNo">190</span>   * ResourceAccessor#list(String, String, boolean, boolean, boolean)}<a name="line.190"></a>
-<span class="sourceLineNo">191</span>   * method on the {@link ResourceAccessor} supplied at {@linkplain<a name="line.191"></a>
-<span class="sourceLineNo">192</span>   * #URLResourceAccessor(ResourceAccessor) construction time}<a name="line.192"></a>
-<span class="sourceLineNo">193</span>   *<a name="line.193"></a>
-<span class="sourceLineNo">194</span>   * @return {@code null} when invoked<a name="line.194"></a>
-<span class="sourceLineNo">195</span>   *<a name="line.195"></a>
-<span class="sourceLineNo">196</span>   * @exception IOException if an error occurs<a name="line.196"></a>
-<span class="sourceLineNo">197</span>   *<a name="line.197"></a>
-<span class="sourceLineNo">198</span>   * @see ResourceAccessor#list(String, String, boolean, boolean, boolean)<a name="line.198"></a>
-<span class="sourceLineNo">199</span>   */<a name="line.199"></a>
-<span class="sourceLineNo">200</span>  @Override<a name="line.200"></a>
-<span class="sourceLineNo">201</span>  public Set&lt;String&gt; list(final String relativeTo, final String path, final boolean includeFiles, final boolean includeDirectories, final boolean recursive) throws IOException {<a name="line.201"></a>
-<span class="sourceLineNo">202</span>    return null;<a name="line.202"></a>
-<span class="sourceLineNo">203</span>  }<a name="line.203"></a>
-<span class="sourceLineNo">204</span><a name="line.204"></a>
-<span class="sourceLineNo">205</span>  /**<a name="line.205"></a>
-<span class="sourceLineNo">206</span>   * Returns the result of invoking the {@link<a name="line.206"></a>
-<span class="sourceLineNo">207</span>   * ResourceAccessor#toClassLoader()} method on the {@link<a name="line.207"></a>
-<span class="sourceLineNo">208</span>   * ResourceAccessor} supplied at {@linkplain<a name="line.208"></a>
-<span class="sourceLineNo">209</span>   * #URLResourceAccessor(ResourceAccessor) construction time}.<a name="line.209"></a>
-<span class="sourceLineNo">210</span>   *<a name="line.210"></a>
-<span class="sourceLineNo">211</span>   * @return a {@link ClassLoader}, or {@code null}<a name="line.211"></a>
-<span class="sourceLineNo">212</span>   *<a name="line.212"></a>
-<span class="sourceLineNo">213</span>   * @see ResourceAccessor#toClassLoader()<a name="line.213"></a>
-<span class="sourceLineNo">214</span>   */<a name="line.214"></a>
-<span class="sourceLineNo">215</span>  @Override<a name="line.215"></a>
-<span class="sourceLineNo">216</span>  public ClassLoader toClassLoader() {<a name="line.216"></a>
-<span class="sourceLineNo">217</span>    if (this.delegate == null) {<a name="line.217"></a>
-<span class="sourceLineNo">218</span>      return null;<a name="line.218"></a>
-<span class="sourceLineNo">219</span>    } else {<a name="line.219"></a>
-<span class="sourceLineNo">220</span>      return this.delegate.toClassLoader();<a name="line.220"></a>
-<span class="sourceLineNo">221</span>    }<a name="line.221"></a>
-<span class="sourceLineNo">222</span>  }<a name="line.222"></a>
-<span class="sourceLineNo">223</span>  <a name="line.223"></a>
-<span class="sourceLineNo">224</span>}<a name="line.224"></a>
+<span class="sourceLineNo">189</span>   * @see ResourceAccessor#toClassLoader()<a name="line.189"></a>
+<span class="sourceLineNo">190</span>   */<a name="line.190"></a>
+<span class="sourceLineNo">191</span>  @Override<a name="line.191"></a>
+<span class="sourceLineNo">192</span>  public ClassLoader toClassLoader() {<a name="line.192"></a>
+<span class="sourceLineNo">193</span>    if (this.delegate == null) {<a name="line.193"></a>
+<span class="sourceLineNo">194</span>      return null;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>    } else {<a name="line.195"></a>
+<span class="sourceLineNo">196</span>      return this.delegate.toClassLoader();<a name="line.196"></a>
+<span class="sourceLineNo">197</span>    }<a name="line.197"></a>
+<span class="sourceLineNo">198</span>  }<a name="line.198"></a>
+<span class="sourceLineNo">199</span>  <a name="line.199"></a>
+<span class="sourceLineNo">200</span>}<a name="line.200"></a>
 
 
 
